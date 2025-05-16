@@ -19,6 +19,8 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
 
             _spawnedCharacters.Add(player, networkPlayerObject);
+
+            UIManager.Instance.AddPlayer(player, "Player1");
         }
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
