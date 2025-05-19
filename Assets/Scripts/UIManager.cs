@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
 
     public Transform playerListParent;
     public GameObject playerEntryPrefab;
+    [SerializeField]
+    private GameObject _hostRoomCanvas;
+    [SerializeField]
+    private GameObject _joinRoomCanvas;
 
     private Dictionary<PlayerRef, GameObject> _playerEntries = new();
 
@@ -37,6 +41,15 @@ public class UIManager : MonoBehaviour
             Destroy(entry);
             _playerEntries.Remove(player);
         }
+    }
+
+    public void CreateHostRoom()
+    {
+        _hostRoomCanvas.SetActive(true);
+    }
+    public void ShowGameRoom()
+    {
+        _joinRoomCanvas.SetActive(true);
     }
 
     public void OnNicknameInputChanged(string input)
