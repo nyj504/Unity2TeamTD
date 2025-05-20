@@ -13,6 +13,9 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private GameObject _JoinRoomPanel;
     [SerializeField] private Transform _playerListParent;
 
+    [SerializeField] private NetworkObject _gameManagerPrefab;
+    private GameManager _gameManager;
+
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
     private Dictionary<PlayerRef, string> _playerNames = new();
 
@@ -20,11 +23,19 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
         Debug.Log("OnPlayerJoined");
-       
+
         if (runner.IsServer)
         {
+            // 1. 플레이어 캐릭터 스폰
             var obj = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
             _spawnedCharacters[player] = obj;
+
+            // 2. GameManager는 최초 한 번만 스폰
+            if (_gameManager == null)
+            {
+                _gameManager = runner.Spawn(_gameManagerPrefab, Vector3.zero, Quaternion.identity, null)
+                    .GetComponent<GameManager>();
+            }
         }
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -103,20 +114,6 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
         });
     }
 
-    private void OnGUI()
-    {
-        if (_runner == null)
-        {
-            if (GUI.Button(new Rect(0, 0, 200, 40), "Host"))
-            {
-                StartGame(GameMode.Host);
-            }
-            if (GUI.Button(new Rect(0, 40, 200, 40), "Join"))
-            {
-                StartGame(GameMode.Client);
-            }
-        }
-    }
     public void OnClickHostRoom()
     {
         UIManager.Instance.CreateHostRoom();
@@ -124,5 +121,16 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     public void OnClickJoinRoom()
     {
         UIManager.Instance.JoinRoom();
+    }
+    public void StartGameIfReady()
+    {
+        if (_gameManager != null)
+        {
+            _gameManager.OnAllPlayersReady();
+        }
+        else
+        {
+            Debug.LogWarning("GameManager가 아직 스폰되지 않았습니다.");
+        }
     }
 }

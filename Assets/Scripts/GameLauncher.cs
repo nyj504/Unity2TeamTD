@@ -6,37 +6,26 @@ public class GameLauncher : MonoBehaviour
 {
     public static GameLauncher Instance;
 
-    [SerializeField] private NetworkRunner _runnerPrefab;
     private NetworkRunner _runner;
-    private void Awake()
+    private void Start()
     {
-        Instance = this;
+        StartGame();
     }
 
     public async void StartGame()
     {
-        if (_runner == null)
-        {
-            _runner = Instantiate(_runnerPrefab); // 프리팹에서 생성
-        }
+        int lobbySceneIndex = SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/LobbyScene.unity");
+        SceneRef lobbySceneRef = SceneRef.FromIndex(lobbySceneIndex);
 
-        _runner.ProvideInput = true;
+        NetworkRunner networkRunner = RunnerManager.Instance.Runner;
+        NetworkSceneManagerDefault sceneManager = networkRunner.GetComponent<NetworkSceneManagerDefault>();
 
-        var result = await _runner.StartGame(new StartGameArgs
+        StartGameResult result = await networkRunner.StartGame(new StartGameArgs
         {
-            GameMode = GameMode.Shared, // 또는 GameMode.Host
+            GameMode = GameMode.Host,
             SessionName = "MyGameRoom",
-            //Scene = INetworkSceneManager.(SceneManager.GetActiveScene().buildIndex),
-            SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+            Scene = lobbySceneRef,
+            SceneManager = sceneManager
         });
-
-        if (result.Ok)
-        {
-            Debug.Log("게임 시작 성공");
-        }
-        else
-        {
-            Debug.LogError($"게임 시작 실패: {result.ShutdownReason}");
-        }
     }
 }
