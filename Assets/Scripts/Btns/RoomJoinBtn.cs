@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using static Unity.Collections.Unicode;
 
 public class RoomJoinBtn : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class RoomJoinBtn : MonoBehaviour
     public void Init(string roomName, NetworkRunner runner,
         GameObject waitingRoom, GameObject joinRoomPanel, Transform playerListParent)
     {
+        _roomName = roomName;
         _roomNameText.text = roomName;
         _runner = runner;
 
@@ -35,20 +37,30 @@ public class RoomJoinBtn : MonoBehaviour
 
     private void JoinRoom()
     {
+        if(!_runner)
+        {
+            _runner = RunnerManager.Instance.Runner;
+        }
+
+        _runner.StartGame(new StartGameArgs
+        {
+            GameMode = GameMode.Client,
+            SessionName = _roomName,
+            SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
+        });
+  
         _JoinRoomPanel.SetActive(false);
         _waitingRoom.SetActive(true);
-        GameObject playerObj = Instantiate(_waitingPlayerPrefab, _playerListParent);
+      
+        _runner.name = _playerName;
 
-        //IReadOnlyList<PlayerRef> players = _runner.ActivePlayers;
+        IEnumerable<PlayerRef> players = _runner.ActivePlayers;
 
-        TextMeshProUGUI playerText = playerObj.GetComponentInChildren<TextMeshProUGUI>();
-        if (playerText != null)
+        foreach (PlayerRef player in _runner.ActivePlayers)
         {
+            GameObject playerObj = Instantiate(_waitingPlayerPrefab, _playerListParent);
+            TextMeshProUGUI playerText = playerObj.GetComponentInChildren<TextMeshProUGUI>();
             playerText.text = _playerName;
-        }
-        else
-        {
-            Debug.LogWarning("WaitingPlayer 프리팹에 TextMeshProUGUI 컴포넌트가 없습니다.");
         }
     }
 }

@@ -50,6 +50,7 @@ public class HostRoomUI : MonoBehaviour
         Debug.Log($"[HostRoom] Creating room: {roomName} / MaxPlayers: {maxPlayers}");
 
         NetworkRunner runner = RunnerManager.Instance.Runner;
+        runner.name = nickName;
        
         runner.StartGame(new StartGameArgs
         {
