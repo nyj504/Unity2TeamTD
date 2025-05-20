@@ -42,25 +42,16 @@ public class RoomJoinBtn : MonoBehaviour
             _runner = RunnerManager.Instance.Runner;
         }
 
+        RunnerManager.Instance.SetPlayerName(_playerName);
+
         _runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Client,
             SessionName = _roomName,
             SceneManager = _runner.GetComponent<NetworkSceneManagerDefault>()
         });
-  
+
         _JoinRoomPanel.SetActive(false);
         _waitingRoom.SetActive(true);
-      
-        _runner.name = _playerName;
-
-        IEnumerable<PlayerRef> players = _runner.ActivePlayers;
-
-        foreach (PlayerRef player in _runner.ActivePlayers)
-        {
-            GameObject playerObj = Instantiate(_waitingPlayerPrefab, _playerListParent);
-            TextMeshProUGUI playerText = playerObj.GetComponentInChildren<TextMeshProUGUI>();
-            playerText.text = _playerName;
-        }
     }
 }

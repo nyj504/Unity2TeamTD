@@ -22,6 +22,6 @@ public class PlayerInfo : NetworkBehaviour
         Nickname = name;
 
         // 서버가 UI에 반영
-        UIManager.Instance.AddPlayer(Object.InputAuthority, name);
+        //UIManager.Instance.AddPlayer(Object.InputAuthority, name);
     }
 }

@@ -14,10 +14,18 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private Transform _playerListParent;
 
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    private Dictionary<PlayerRef, string> _playerNames = new();
 
     private NetworkRunner _runner;
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
+        Debug.Log("OnPlayerJoined");
+       
+        if (runner.IsServer)
+        {
+            var obj = runner.Spawn(_playerPrefab, Vector3.zero, Quaternion.identity, player);
+            _spawnedCharacters[player] = obj;
+        }
     }
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {

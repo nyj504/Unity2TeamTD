@@ -25,12 +25,8 @@ public class HostRoomUI : MonoBehaviour
     private GameObject _waitingRoom;
     [SerializeField]
     private GameObject _joinRoom;
-    [SerializeField]
-    private GameObject _waitingPlayerPrefab;
-    [SerializeField]
-    private Transform _playerListParent;
+   
 
-    private string _localPlayerName;
     private void Awake()
     {
         _createButton.onClick.AddListener(OnClickCreateRoom);
@@ -39,6 +35,7 @@ public class HostRoomUI : MonoBehaviour
     {
         string roomName = _roomNameInput.text;
         string nickName = _nickNameInput.text;
+       
         int maxPlayers = _soloToggle.isOn ? 1 : 2;
 
         if (string.IsNullOrEmpty(roomName))
@@ -50,8 +47,8 @@ public class HostRoomUI : MonoBehaviour
         Debug.Log($"[HostRoom] Creating room: {roomName} / MaxPlayers: {maxPlayers}");
 
         NetworkRunner runner = RunnerManager.Instance.Runner;
-        runner.name = nickName;
-       
+        RunnerManager.Instance.SetPlayerName(nickName);
+     
         runner.StartGame(new StartGameArgs
         {
             GameMode = GameMode.Host,
@@ -60,18 +57,6 @@ public class HostRoomUI : MonoBehaviour
             SceneManager = runner.GetComponent<NetworkSceneManagerDefault>()
         });
 
-        CreateWaitingRoom(roomName);
-    }
-
-     private void CreateWaitingRoom(string roomName)
-    {
         _waitingRoom.SetActive(true);
-        this.gameObject.SetActive(false);
-
-        GameObject playerObj = Instantiate(_waitingPlayerPrefab, _playerListParent);
-
-        TextMeshProUGUI playerText = playerObj.GetComponentInChildren<TextMeshProUGUI>();
-    
-        playerText.text = roomName;
     }
 }

@@ -633,6 +633,9 @@ MonoBehaviour:
   playerEntryPrefab: {fileID: 860240529607314697, guid: cf9f924d1fd543f4995c10d7cc2ed044, type: 3}
   _hostRoomCanvas: {fileID: 1514224682}
   _joinRoomCanvas: {fileID: 645077605}
+  _waitingRoom: {fileID: 633898593}
+  _waitingPlayerPrefab: {fileID: 4283264585215552870, guid: c9766fc145e483a4580d87a47357504b, type: 3}
+  _playerListParent: {fileID: 635511712}
 --- !u!1 &178987762
 GameObject:
   m_ObjectHideFlags: 0
@@ -3839,7 +3842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPrefab:
-    RawGuidValue: 83a58354c0a4ba948b3ab8cab519b60a
+    RawGuidValue: c9766fc145e483a4580d87a47357504b
   _roomButtonPrefab: {fileID: 8274812636989383325, guid: 5d3456243891fca418bc081b4e9a27bc, type: 3}
   _roomListParent: {fileID: 1167944023}
   _waitingRoom: {fileID: 633898593}
@@ -4319,8 +4322,6 @@ MonoBehaviour:
   _roomListParent: {fileID: 1167944023}
   _waitingRoom: {fileID: 633898593}
   _joinRoom: {fileID: 0}
-  _waitingPlayerPrefab: {fileID: 4283264585215552870, guid: c9766fc145e483a4580d87a47357504b, type: 3}
-  _playerListParent: {fileID: 635511712}
 --- !u!1 &1516297171
 GameObject:
   m_ObjectHideFlags: 0

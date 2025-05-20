@@ -15,6 +15,12 @@ public class UIManager : MonoBehaviour
     private GameObject _hostRoomCanvas;
     [SerializeField]
     private GameObject _joinRoomCanvas;
+    [SerializeField]
+    private GameObject _waitingRoom;
+    [SerializeField]
+    private GameObject _waitingPlayerPrefab;
+    [SerializeField]
+    private Transform _playerListParent;
 
     private Dictionary<PlayerRef, GameObject> _playerEntries = new();
 
@@ -22,16 +28,9 @@ public class UIManager : MonoBehaviour
     {
         _instance = this;
     }
-    public void AddPlayer(PlayerRef player, string nickname)
+    public void AddPlayer()
     {
-        if (_playerEntries.ContainsKey(player)) return;
-
-        Debug.Log("플레이어 접속");
-
-        GameObject entry = Instantiate(playerEntryPrefab, playerListParent);
-        entry.GetComponentInChildren<TextMeshProUGUI>().text = nickname;
-
-        _playerEntries[player] = entry;
+        RefreshWaitingRoomUI();
     }
 
     public void RemovePlayer(PlayerRef player)
@@ -51,5 +50,23 @@ public class UIManager : MonoBehaviour
     {
         _joinRoomCanvas.SetActive(true);
     }
+    private void RefreshWaitingRoomUI()
+    {
+        Debug.Log("RefreshWaitingRoom");
+        foreach (Transform child in _playerListParent)
+        {
+            Destroy(child.gameObject);
+        }
 
+        foreach (KeyValuePair<PlayerRef, string> pair in RunnerManager.Instance.GetAllNamePairs())
+        {
+            GameObject playerObj = Instantiate(_waitingPlayerPrefab, _playerListParent);
+
+            TextMeshProUGUI text = playerObj.GetComponentInChildren<TextMeshProUGUI>();
+            if (text != null)
+            {
+                text.text = pair.Value;
+            }
+        }
+    }
 }
