@@ -35,6 +35,7 @@ public class BasicSpawner : MonoBehaviour, INetworkRunnerCallbacks
             {
                 _gameManager = runner.Spawn(_gameManagerPrefab, Vector3.zero, Quaternion.identity, null)
                     .GetComponent<GameManager>();
+                
             }
         }
     }

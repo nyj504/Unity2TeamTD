@@ -11,11 +11,23 @@ public enum GameState
 public class GameManager : NetworkBehaviour
 {
     public enum GameState { Lobby, InGame }
-
+    
+    private static GameManager _instance;
+    public static GameManager Instance => _instance;
     [Networked] public GameState CurrentState { get; set; }
 
     public override void Spawned()
     {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Runner.Despawn(Object); // 중복 생성 방지
+        }
+
         if (Object.HasStateAuthority)
         {
             CurrentState = GameState.Lobby;
