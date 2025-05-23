@@ -4,6 +4,7 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] private EnemyPath _enemyPath;
     [SerializeField] private float _spawnInterval = 2f;
+    [SerializeField] private TurretHead[] _turretHead;
 
     private GameObject _enemyPrefab;
     private float _timer = 0f;
@@ -36,6 +37,7 @@ public class EnemyManager : MonoBehaviour
         if (enemyScript != null)
         {
             enemyScript.Init(_enemyPath, 3.0f);
+            _turretHead[0].SetTarget(enemyScript);
         }
     }
 }
