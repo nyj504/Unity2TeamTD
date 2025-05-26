@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private Enemy _target;
-    private float _bulletspeed = 2.0f;
+    private GameObject _target;
+    private float _bulletSpeed = 10.0f;
+    private float _hitThreshold = 0.1f;
 
     private void Update()
     {
         Vector3 direction = _target.transform.position - transform.position;
-        transform.position += direction * _bulletspeed * Time.deltaTime;
+        float distanceThisFrame = _bulletSpeed * Time.deltaTime;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = targetRotation;
+        transform.position += direction.normalized * distanceThisFrame;
     }
-    public void SetBulletTarget(Enemy target)
+    public void SetBulletTarget(GameObject target)
     {
         _target = target;   
     }

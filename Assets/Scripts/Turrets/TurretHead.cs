@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class TurretHead : MonoBehaviour
 {
-    private Enemy _target;
+    private GameObject _target;
     [SerializeField] private float _rotationSpeed = 5.0f;
+    private float _spawnTimer = 0.0f;
+    private float _bulletSpawnTimer = 1.0f;
 
     private Bullet _bulletPrefabs;
     private void Awake()
@@ -18,7 +20,6 @@ public class TurretHead : MonoBehaviour
 
         Vector3 direction = _target.transform.position - transform.position;
         direction.y = 0f;
-        Debug.Log(direction);
 
         if (direction == Vector3.zero)
             return;
@@ -26,17 +27,30 @@ public class TurretHead : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * _rotationSpeed);
 
-        AttackTarget(_target);
+        _spawnTimer += Time.deltaTime;
+        
+        if(_target)
+        {
+            if (_spawnTimer >= _bulletSpawnTimer)
+            {
+                _spawnTimer -= _bulletSpawnTimer;
+                AttackTarget();
+            }
+        }
     }
 
-    public void SetTarget(Enemy target)
+    public void SetTarget(GameObject target)
     {
         _target = target;
     }
 
-    private void AttackTarget(Enemy target)
+    public GameObject GetTarget()
     {
-        Instantiate(_bulletPrefabs, transform.position, Quaternion.identity);
-        _bulletPrefabs.SetBulletTarget(_target);
+        return _target;
+    }
+    private void AttackTarget()
+    {
+        Bullet bulletInstance = Instantiate(_bulletPrefabs, transform.position, Quaternion.identity);
+        bulletInstance.SetBulletTarget(_target);
     }
 }

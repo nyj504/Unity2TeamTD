@@ -37,7 +37,11 @@ public class EnemyManager : MonoBehaviour
         if (enemyScript != null)
         {
             enemyScript.Init(_enemyPath, 3.0f);
-            _turretHead[0].SetTarget(enemyScript);
+
+            if (!_turretHead[0].GetTarget())
+            {
+                _turretHead[0].SetTarget(enemy);
+            }
         }
     }
 }
